@@ -1,8 +1,18 @@
 # PostgreSQL Commandments
 
+[<img src="https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg" align="right"  width="100">](https://www.postgresql.org/)
+
 Short axioms about how to use Postgres.
 
-[<img src="https://wiki.postgresql.org/images/a/a4/PostgreSQL_logo.3colors.svg" align="right"  width="100">](https://www.postgresql.org/)
+<details>
+  <summary>Disclaimer</summary>
+  
+  - These are not recommendations from the official PostgreSQL community.
+  
+  - They are my personal observations based on my own experience as PostgreSQL DBA for the past 10 years.
+  
+  - You can follow or ignore them but the main course of these commandments - prioritise data safety over performance.
+</details>
 
 #
 
