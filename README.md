@@ -39,6 +39,7 @@ In the example below, you can see how Postgres handles SIGKILL:
 3) Reinitializes and runs automatic recovery process (which may take a while in various scenarios).
 4) Finishes recovery and starts accepting connections. (edited)
 
+```
 1549 @ from  [] LOG:  server process (PID 9774) was terminated by signal 9: Killed
 1549 @ from  [] DETAIL:  Failed process was running: SELECT abalance FROM pgbench_accounts WHERE aid = 729760;
 1549 @ from  [] LOG:  terminating any other active server processes
@@ -112,7 +113,9 @@ In the example below, you can see how Postgres handles SIGKILL:
 9817 @ from  [] LOG:  checkpoint starting: end-of-recovery immediate
 9817 @ from  [] LOG:  checkpoint complete: wrote 7 buffers (0.0%); 0 WAL file(s) added, 0 removed, 0 recycled; write=0.000 s, sync=0.016 s, total=0.042 s; sync files=7, longest=0.008 s, average=0.002 s; distance=29 kB, estimate=29 kB
 1549 @ from  [] LOG:  database system is ready to accept connections
+```
 </details>
+
 
 Don't delete rows by billions at a time.
 
