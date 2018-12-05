@@ -16,9 +16,53 @@ Short axioms about how to use Postgres.
 
 #
 
-Avoid long transactions.
+<details>
+  <summary>Avoid long transactions.</summary>
 
-Avoid idle transactions.
+Long, idle and especially write transactions acquire and hold locks on tuples, preventing their cleanup by vacuum.
+
+Look at the performance of the pgbench benchmark:
+
+```
+pgbench -c8 -P 60 -T 3600 -U postgres pgbench
+starting vacuum...end.
+progress: 60.0 s, 9506.3 tps, lat 0.841 ms stddev 0.390
+progress: 120.0 s, 5262.1 tps, lat 1.520 ms stddev 0.517
+progress: 180.0 s, 3801.8 tps, lat 2.104 ms stddev 0.757
+progress: 240.0 s, 2960.0 tps, lat 2.703 ms stddev 0.830
+progress: 300.0 s, 2575.8 tps, lat 3.106 ms stddev 0.891
+```
+...in the end
+```
+progress: 3300.0 s, 759.5 tps, lat 10.533 ms stddev 2.554
+progress: 3360.0 s, 751.8 tps, lat 10.642 ms stddev 2.604
+progress: 3420.0 s, 743.6 tps, lat 10.759 ms stddev 2.655
+progress: 3480.0 s, 739.1 tps, lat 10.824 ms stddev 2.662
+progress: 3540.0 s, 742.5 tps, lat 10.774 ms stddev 2.579
+progress: 3600.0 s, 868.2 tps, lat 9.215 ms stddev 2.569
+```
+As you can see, performance is dropped dramatically over a short period of time.
+
+Now, look at the vacuum logs. 
+```
+tuples: 0 removed, 692428 remain, 691693 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 984009 remain, 983855 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 1176821 remain, 1176821 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 1494122 remain, 1494122 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 2022284 remain, 2022284 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 2756298 remain, 2756153 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 3500913 remain, 3500693 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 4631448 remain, 4631354 are dead but not yet removable, oldest xmin: 62109160
+tuples: 0 removed, 5377941 remain, 5374941 are dead but not yet removable, oldest xmin: 62109160
+```
+Pay attention on the number of dead but not yet removable rows. Their number increases continuously during the benchmark. Also, you can see that oldest the xmin is constant.
+</details>
+
+<details>
+  <summary>Avoid idle transactions.</summary>
+
+See the example above.
+</details>
 
 Don't disable autovacuum.
 
