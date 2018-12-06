@@ -78,7 +78,9 @@ Don't remove anything from $DATADIR.
   <summary>Don't use 'kill -9' against Postgres processes.</summary>
 
 PostgreSQL’s official documentation states:
-It is best not to use SIGKILL to shut down the server. Doing so will prevent the server from releasing shared memory and semaphores, which might then have to be done manually before a new server can be started. (quote end)
+```
+It is best not to use SIGKILL to shut down the server. Doing so will prevent the server from releasing shared memory and semaphores, which might then have to be done manually before a new server can be started.
+```
 Moreover, using SIGKILL against even a single Postgres backend forces to immediately terminate all other backends, re-initialize internal structures and run recovery from last check point, at which database cluster is not available for clients and applications until recovery ends.
 
 In the example below, you can see how Postgres handles SIGKILL:
