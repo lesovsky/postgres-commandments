@@ -56,6 +56,8 @@ tuples: 0 removed, 4631448 remain, 4631354 are dead but not yet removable, oldes
 tuples: 0 removed, 5377941 remain, 5374941 are dead but not yet removable, oldest xmin: 62109160
 ```
 Pay attention on the number of dead but not yet removable rows. Their number increases continuously during the benchmark. Also, you can see that oldest the xmin is constant.
+
+---
 </details>
 
 <details>
