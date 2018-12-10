@@ -197,7 +197,7 @@ Don't trust non-validated backup.
 Let’s assume we have some logs or events stored in the database
 
 ```
-=# select pg_size_pretty(pg_relation_size('products'));
+=# select pg_size_pretty(pg_relation_size('history_log'));
  pg_size_pretty 
 ----------------
  155 GB
@@ -234,7 +234,7 @@ Ok, let’s check how many rows there are in the table now.
 It seems we deleted something around of 89% of the table. Let’s check its size.
 
 ```
-select pg_size_pretty(pg_relation_size('products'));
+select pg_size_pretty(pg_relation_size('history_log'));
  pg_size_pretty 
 ----------------
  155 GB
