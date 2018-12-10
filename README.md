@@ -192,7 +192,61 @@ Hot standby != backup.
 
 Don't trust non-validated backup.
 
-Use partitioning for archived data.
+<details>
+  <summary>Use partitioning for archived data.</summary>
+Let’s assume we have some logs or events stored in the database
+```
+select pg_size_pretty(pg_relation_size('products'));
+ pg_size_pretty 
+----------------
+ 155 GB
+
+# select count(*) from history_log;
+   count  
+-----------
+ 2102342910
+```
+
+At some point, we’ll decide to clean old events
+
+```
+# delete from history_log where updated_at < '2018-11-01';
+DELETE 1885782465
+Time: 327220.719 ms (12:05.221)
+```
+
+The query would take twelve minutes to complete. However, during this action there is a less obvious process that takes place - query would generate certain amount of WAL that will then need to be transferred into all standbys.
+Ok, let’s check how many rows there are in the table now.
+
+```
+# select count(*) from history_log;
+   count  
+-----------
+ 216560445
+
+# select 100 * 1885782465::bigint / 2102342910;
+ ?column? 
+----------
+       89
+```
+
+It seems we deleted something around of 89% of the table. Let’s check its size.
+
+```
+select pg_size_pretty(pg_relation_size('products'));
+ pg_size_pretty 
+----------------
+ 155 GB
+```
+
+Huh, the size hasn’t been changed?!
+
+The thing is, Postgres never performs real deletion. It just marks rows as removed. Later on, space occupied by these “removed” rows will be cleared by vacuum and available space can again be used for new rows, however, this space still belongs to table (in some rare circumstances, table can be truncated and free space will returned to the file system).
+
+Using partitioning with historical data allow you 1) to drop old data quickly, 2) without overhead related to WAL generation 3) and free up space immediately.
+
+---
+</details>
 
 Upstream and master candidate should be the same.
 
