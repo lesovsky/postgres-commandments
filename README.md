@@ -195,13 +195,14 @@ Don't trust non-validated backup.
 <details>
   <summary>Use partitioning for archived data.</summary>
 Let’s assume we have some logs or events stored in the database
+
 ```
-select pg_size_pretty(pg_relation_size('products'));
+=# select pg_size_pretty(pg_relation_size('products'));
  pg_size_pretty 
 ----------------
  155 GB
 
-# select count(*) from history_log;
+=# select count(*) from history_log;
    count  
 -----------
  2102342910
@@ -210,21 +211,21 @@ select pg_size_pretty(pg_relation_size('products'));
 At some point, we’ll decide to clean old events
 
 ```
-# delete from history_log where updated_at < '2018-11-01';
+=# delete from history_log where updated_at < '2018-11-01';
 DELETE 1885782465
-Time: 327220.719 ms (12:05.221)
+Time: 725220.719 ms (12:05.221)
 ```
 
 The query would take twelve minutes to complete. However, during this action there is a less obvious process that takes place - query would generate certain amount of WAL that will then need to be transferred into all standbys.
 Ok, let’s check how many rows there are in the table now.
 
 ```
-# select count(*) from history_log;
+=# select count(*) from history_log;
    count  
 -----------
  216560445
 
-# select 100 * 1885782465::bigint / 2102342910;
+=# select 100 * 1885782465::bigint / 2102342910;
  ?column? 
 ----------
        89
