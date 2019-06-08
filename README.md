@@ -21,7 +21,7 @@ Short axioms about how to use Postgres.
 
 Long, idle and especially write transactions acquire and hold locks on tuples, preventing their cleanup by vacuum.
 
-Look at the performance of the pgbench benchmark:
+Look at the performance of the pgbench benchmark (8 clients read and write to the database during 1 hour):
 
 ```
 pgbench -c8 -P 60 -T 3600 -U postgres pgbench
@@ -63,7 +63,8 @@ Pay attention on the number of dead but not yet removable rows. Their number inc
 <details>
   <summary>Avoid idle transactions.</summary>
 
-See the example above.
+Idle transactions is the special case when an application starts transaction with `BEGIN` command and doesn't close it correctly (with `COMMIT`,`ROLLBACK` or `END` command). This might occur due to many different reasons on application side: absent or wrong error handling inside transactions, working with remote data sources like other databases or API from open transactions, etc.
+Negative effects are the same as in case of long write transactions - performance degradation. See the example above. 
 
 ---
 </details>
