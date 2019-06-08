@@ -254,8 +254,19 @@ Upstream and master candidate should be the same.
 
 Don't re-invent queues, use PgQ.
 
-Keep logs outside of $DATADIR.
+<details>
+  <summary>Keep logs outside of $DATADIR.</summary>
 
+Keeping logs in $DATADIR is configured by default in most of installations and has some drawbacks:
+- logs are included into the backups made by pg_basebackup-based backup tools (barman, wal-g, etc.)
+- in case of writing too many logs:
+  - logs might take too much space and postgres might crash due to 'No left space on device' error.
+  - writing logs might add extra load on IO subsystem and performance of user queries might suffer. 
+
+Better configuration is placing logs outside of $DATADIR, for example into `/var/log/postgresql`
+
+---
+</details>
 #
 
 :elephant: Contributions welcome. Add commandments or ideas through [pull requests](https://github.com/lesovsky/postgres-commandments/pulls) or create an [issue](https://github.com/lesovsky/postgres-commandments/issues) to start a discussion.
