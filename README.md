@@ -63,7 +63,7 @@ Pay attention on the number of dead but not yet removable rows. Their number inc
 <details>
   <summary>Avoid idle transactions.</summary>
 
-Idle transactions is the special case when an application starts transaction with `BEGIN` command and doesn't close it correctly (with `COMMIT`,`ROLLBACK` or `END` command). This might occur due to many different reasons on application side: absent or wrong error handling inside transactions, working with remote data sources like other databases or API from open transactions, etc.
+"Idle transactions" is the special case when an application starts transactions with `BEGIN` command and doesn't close them correctly (with `COMMIT`,`ROLLBACK` or `END` command). This might occur due to many different reasons on the application side: absent or wrong error handling inside application code when working with transactions, working with remote data sources like other databases or API from open transactions, etc.
 Negative effects are the same as in case of long write transactions - performance degradation. See the example above. 
 
 ---
